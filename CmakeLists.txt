@@ -1,0 +1,15 @@
+project(lazyc)
+
+cmake_minimum_required(VERSION 3.0)
+
+add_compile_options(-g)
+
+add_library(lazyC STATIC 
+    src/error/error.c
+    src/memory/resource.c
+    src/mutex/mutex.c
+)
+
+add_executable(lazytest src/main.c)
+
+target_link_libraries(lazytest lazyC)
