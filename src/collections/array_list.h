@@ -1,0 +1,106 @@
+#ifndef LAZY_ARRAY_LIST_H
+#define LAZY_ARRAY_LIST_H
+
+#include "../macros.h"
+
+/// @brief lazy_array_list_node (single linked list node)
+struct lazy_array_list_node_t {
+    void *data;
+    struct lazy_array_list_node_t *next, *prev;
+};
+
+typedef struct lazy_array_list_node_t lazy_array_list_node_t;
+
+/// @brief the lazy controller.
+/// Simple & performant array_list implementation by using serializable double-linked lists
+struct lazy_array_list_controller_t {
+    lazy_array_list_node_t *first, *last;
+    /// @brief The deallocator to use, if null then free(data) will be used
+    void (*deallocator)(void *);
+    unsigned int length;
+};
+
+typedef struct lazy_array_list_controller_t lazy_array_list_controller_t;
+
+/// @brief Inits the controller
+/// @param controller the controller to initialize
+extern void lazy_array_list_init(ref(lazy_array_list_controller_t) controller);
+
+/// @brief Deinits the controller and frees the list
+/// @param controller the controller to initialize
+extern void lazy_array_list_deinit(ref(lazy_array_list_controller_t) controller);
+
+/// @brief sets the deallocator for a lazy_array_list
+/// @param controller the list controller 
+/// @param deallocator a function that should be used to free data
+extern void lazy_array_list_set_deallocator(ref(lazy_array_list_controller_t) controller, void(*deallocator)(void *));
+
+/// @brief Returns the first node of the list
+/// @param controller the list controller 
+/// @param index the index of the node to get
+/// @return the node or null if an error ocurred
+extern ref(lazy_array_list_node_t) lazy_array_list_at(ref(lazy_array_list_controller_t) controller, unsigned int index);
+
+/// @brief search in ascendent order 
+extern ref(lazy_array_list_node_t) __lazy_array_list_at_asc(ref(lazy_array_list_controller_t) controller, unsigned int index);
+
+/// @brief search in descendent order 
+extern ref(lazy_array_list_node_t) __lazy_array_list_at_desc(ref(lazy_array_list_controller_t) controller, unsigned int index);
+
+/*
+/// @brief Returns the last node of the list
+/// @param controller the list controller 
+/// @return the last list node or null if the list was empty
+extern ref(lazy_array_list_node_t) __lazy_array_list_get_last(ref(lazy_array_list_controller_t) controller);
+*/
+
+/// @brief create a new node
+/// @param size bytes to allocate
+/// @return 0 if an error ocurred or a new lazy_array_list_node_t that must to be deallocated using by the list controller deallocator
+extern new(lazy_array_list_node_t) __lazy_array_list_make_node(ref(lazy_array_list_controller_t) controller, ref(void) new_data, ref(lazy_array_list_node_t) prev, ref(lazy_array_list_node_t) next);
+
+/// @brief deallocates a node of the array list
+/// @param controller the list controller 
+extern void __lazy_array_list_free_node(ref(lazy_array_list_controller_t) controller, ref(lazy_array_list_node_t) node);
+
+/// @brief adds a new item to the front of the list
+/// @param controller the list controller 
+/// @param new_data the data to be added, it should be possible to deallocate using the deallocator in case
+extern void lazy_array_list_push_front(ref(lazy_array_list_controller_t) controller, ref(void) new_data);
+
+/// @brief adds a new item to the back of the list
+/// @param controller the list controller 
+/// @param new_data the data to be added, it should be possible to deallocate using the deallocator in case
+extern void lazy_array_list_push_back(ref(lazy_array_list_controller_t) controller, ref(void) new_data);
+
+/// @brief removes an item on the front of the list
+/// @param controller the list controller 
+extern void lazy_array_list_pop_front(ref(lazy_array_list_controller_t) controller);
+
+/// @brief removes an item on the back of the list
+/// @param controller the list controller 
+extern void lazy_array_list_pop_back(ref(lazy_array_list_controller_t) controller);
+
+/// @brief removes the element at index
+/// @param controller the list controller
+/// @param index the element to remove
+extern void lazy_array_list_remove(ref(lazy_array_list_controller_t) controller,  unsigned int index);
+
+/// @brief removes a set of elements starting from index
+/// @param controller the list controller
+/// @param index the element to remove
+/// @param size the number of elements to remove
+extern void lazy_array_list_remove_set(ref(lazy_array_list_controller_t) controller,  unsigned int index, unsigned int size);
+
+/// @brief inserts a new element at index
+/// @param controller the list controller
+/// @param index to insert at 
+extern void lazy_array_list_insert(ref(lazy_array_list_controller_t) controller,  unsigned int index, ref(void) new_data);
+
+/// @brief replaces a set of elements
+/// @param controller the list controller
+/// @param index the element to remove
+/// @param size the number of elements to replace
+/// @param new_data the data of the new element
+extern void lazy_array_list_replace(ref(lazy_array_list_controller_t) controller,  unsigned int index, unsigned int size, ref(void) new_data);
+#endif // LAZY_ARRAY_LIST_H

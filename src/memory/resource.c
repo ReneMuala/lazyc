@@ -28,7 +28,10 @@ void lazy_make_resource(ref(lazy_resource_controller_t) controller, ref(ref(void
         last->next = (struct lazy_resource_t*) malloc(lazy_resource_size);
         last = last->next;
     }
-    (*ptr) = malloc(data_size);
+    if(data_size)
+        (*ptr) = malloc(data_size);
+    else
+        (*ptr) = 0;
     last->size = data_size + lazy_resource_size;
     last->next = 0;
     last->data = ptr;
@@ -50,4 +53,10 @@ void lazy_free_resources(ref(lazy_resource_controller_t) controller){
         free(last);
         current = current->next;
     }
+}
+
+ref(void) lazy_move(void** origin_ptr){
+    ref(void) origin = (*origin_ptr);
+    (*origin_ptr) = 0;
+    return origin;
 }

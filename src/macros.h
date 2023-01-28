@@ -1,4 +1,7 @@
 #pragma once
+
+#define LAZYC_VERSION "0.0.2" 
+
 #include <stdlib.h>
 /// @brief if x is false, then y will be returned
 #define check_or_return(x, y) \

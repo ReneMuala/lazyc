@@ -41,3 +41,7 @@ extern void lazy_make_resource(ref(lazy_resource_controller_t) controller, ref(r
 /// @brief deallocates all resources associated with the controller
 /// @param controller the lazy controller
 extern void lazy_free_resources(ref(lazy_resource_controller_t) controller);
+
+/// @brief moves the reference from origin, cleaning it 
+/// @param origin_ptr a pointer to the pointer holding reference
+extern ref(void) lazy_move(void** origin_ptr);

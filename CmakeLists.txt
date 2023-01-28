@@ -8,6 +8,7 @@ add_library(lazyC STATIC
     src/error/error.c
     src/memory/resource.c
     src/mutex/mutex.c
+    src/collections/array_list.c
 )
 
 add_executable(lazytest src/main.c)

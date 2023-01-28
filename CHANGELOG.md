@@ -1,4 +1,8 @@
-# 0.0.1 - current
+# 0.0.2
+
+- feat: added array_list colletion
+
+# 0.0.1
 
 - feat: added macros
 - feat: added memory module
